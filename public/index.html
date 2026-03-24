@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Twitter Unofficial API</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐦</text></svg>" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <span class="nav-logo">🐦 Twitter API</span>
+      <div class="nav-links">
+        <a href="#demo">Demo</a>
+        <a href="#docs">Docs</a>
+        <a href="https://github.com/cy4udev/Twitter-Unofficial-API" target="_blank">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="badge">v2.0.0 · Open Source</div>
+      <h1>Twitter Unofficial API</h1>
+      <p class="hero-sub">Login to Twitter programmatically. Supports proxies, 2FA, checkpoints, and cookie extraction.</p>
+      <div class="hero-btns">
+        <a href="#demo" class="btn btn-primary">Try Demo</a>
+        <a href="#docs" class="btn btn-outline">View Docs</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="container">
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🔐</div>
+          <h3>Secure Login</h3>
+          <p>Full login flow including JS instrumentation, SSO, and password steps.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3>2FA & Checkpoints</h3>
+          <p>Handles two-factor auth and email checkpoint verification automatically.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <h3>Proxy Support</h3>
+          <p>Route requests through HTTP/HTTPS proxies for anonymity and geo-bypass.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🍪</div>
+          <h3>Cookie Extraction</h3>
+          <p>Extracts ct0 and full cookie string after successful login.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔄</div>
+          <h3>Auto Retry</h3>
+          <p>Built-in retry logic with exponential backoff on network failures.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🐳</div>
+          <h3>Docker Ready</h3>
+          <p>Multi-stage Docker build. Deploy anywhere in seconds.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO -->
+  <section class="demo-section" id="demo">
+    <div class="container">
+      <h2 class="section-title">Live Demo</h2>
+      <p class="section-sub">Test the login API directly from your browser.</p>
+
+      <div class="demo-grid">
+        <div class="demo-form-wrap">
+          <form id="loginForm" class="demo-form">
+            <div class="form-group">
+              <label>Username / Email</label>
+              <input type="text" id="username" placeholder="@username or email" autocomplete="off" />
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="password" placeholder="••••••••" />
+            </div>
+            <div class="form-group">
+              <label>Email (for alternate identifier)</label>
+              <input type="email" id="email" placeholder="optional" />
+            </div>
+            <div class="form-group">
+              <label>Proxy (optional)</label>
+              <input type="text" id="proxy" placeholder="http://user:pass@host:port" />
+            </div>
+            <button type="submit" class="btn btn-primary btn-full" id="submitBtn">
+              <span id="btnText">Login</span>
+              <span id="btnSpinner" class="spinner hidden"></span>
+            </button>
+          </form>
+        </div>
+
+        <div class="demo-result-wrap">
+          <div class="result-header">
+            <span>Response</span>
+            <span id="statusBadge" class="status-badge"></span>
+          </div>
+          <pre id="resultBox" class="result-box">// Result will appear here...</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOCS -->
+  <section class="docs-section" id="docs">
+    <div class="container">
+      <h2 class="section-title">API Reference</h2>
+
+      <div class="endpoint-card">
+        <div class="endpoint-header">
+          <span class="method get">GET</span>
+          <code>/health</code>
+          <span class="endpoint-desc">Health check</span>
+        </div>
+        <pre class="code-block">curl https://your-space.hf.space/health</pre>
+      </div>
+
+      <div class="endpoint-card">
+        <div class="endpoint-header">
+          <span class="method post">POST</span>
+          <code>/api/login</code>
+          <span class="endpoint-desc">Login to Twitter</span>
+        </div>
+        <pre class="code-block">{
+  "username": "your_username",
+  "password": "your_password",
+  "email": "optional@email.com",
+  "twoFactorCode": "optional_2fa",
+  "checkpointCode": "optional_checkpoint",
+  "proxy": "http://user:pass@host:port",
+  "language": "en"
+}</pre>
+        <div class="response-example">
+          <div class="resp-label">Success Response</div>
+          <pre class="code-block success">{
+  "success": true,
+  "ct0": "abc123...",
+  "cookie": "ct0=abc123; auth_token=xyz..."
+}</pre>
+        </div>
+      </div>
+
+      <div class="install-section">
+        <h3>Install as npm package</h3>
+        <pre class="code-block">npm install twitter-unofficial-api</pre>
+        <pre class="code-block">import { Twitter } from 'twitter-unofficial-api';
+
+const client = new Twitter({ language: 'en' });
+const result = await client.login('username', 'password');
+console.log(result.cookie);</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <p>Built with ❤️ by <a href="https://cy4u.dev" target="_blank">cy4udev</a> · 
+         <a href="https://github.com/cy4udev/Twitter-Unofficial-API" target="_blank">GitHub</a> · 
+         <a href="https://huggingface.co/spaces" target="_blank">HuggingFace</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "name": "twitter-unofficial-api",
+  "version": "2.0.0",
+  "description": "Twitter Unofficial API - Full-stack web app for Twitter login automation",
+  "main": "dist/Twitter.js",
+  "types": "dist/Twitter.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "ts-node src/server.ts"
+  },
+  "keywords": ["Twitter", "Twitter API", "X API", "Login", "Docker"],
+  "author": "cy4udev",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.7.2",
+    "express": "^4.19.2",
+    "https-proxy-agent": "^7.0.5",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "form-data": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.0",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/multer": "^1.4.11",
+    "typescript": "^5.4.5"
+  }
+}

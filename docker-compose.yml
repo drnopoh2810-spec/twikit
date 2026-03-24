@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  twitter-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    image: twitter-unofficial-api:latest
+    container_name: twitter-api
+    restart: unless-stopped
+    ports:
+      - "${PORT:-7860}:7860"
+    environment:
+      - PORT=7860
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:7860/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

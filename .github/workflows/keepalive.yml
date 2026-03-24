@@ -1,0 +1,27 @@
+name: Keep Alive - Ping HuggingFace Space
+
+on:
+  schedule:
+    # Every 25 minutes (cron minimum is every 5 min on GitHub Actions)
+    - cron: '*/25 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping HuggingFace Space
+        env:
+          HF_USERNAME: ${{ secrets.HF_USERNAME }}
+          HF_SPACE_NAME: ${{ secrets.HF_SPACE_NAME }}
+        run: |
+          SPACE_URL="https://$HF_USERNAME-$HF_SPACE_NAME.hf.space/health"
+          echo "Pinging: $SPACE_URL"
+
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$SPACE_URL" || echo "000")
+
+          if [ "$STATUS" = "200" ]; then
+            echo "✅ Space is alive (HTTP $STATUS)"
+          else
+            echo "⚠️ Space returned HTTP $STATUS - may be waking up"
+          fi

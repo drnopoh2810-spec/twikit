@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة التحكم - Twitter API</title>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">🐦 Twitter API</div>
+      <nav class="nav-menu">
+        <a href="#accounts" class="nav-item active" data-tab="accounts">
+          <span>📱</span> حسابات تويتر
+        </a>
+        <a href="#api-keys" class="nav-item" data-tab="api-keys">
+          <span>🔑</span> مفاتيح API
+        </a>
+        <a href="#tweet" class="nav-item" data-tab="tweet">
+          <span>✍️</span> نشر تغريدة
+        </a>
+        <a href="#docs" class="nav-item" data-tab="docs">
+          <span>📚</span> التوثيق
+        </a>
+      </nav>
+      <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="header">
+        <h1 id="page-title">حسابات تويتر</h1>
+        <div class="user-info">
+          <span id="username">المستخدم</span>
+        </div>
+      </div>
+
+      <!-- Accounts Tab -->
+      <div class="tab-content active" id="accounts-tab">
+        <div class="card">
+          <h2>إضافة حساب تويتر جديد</h2>
+          <div class="add-account-methods">
+            <button class="btn btn-primary" onclick="showLoginForm()">تسجيل دخول تلقائي</button>
+            <button class="btn btn-outline" onclick="showCookieForm()">إضافة من Cookies</button>
+          </div>
+
+          <!-- Login Form -->
+          <form id="twitter-login-form" class="form hidden">
+            <h3>تسجيل الدخول إلى تويتر</h3>
+            <input type="text" id="tw-username" placeholder="اسم المستخدم أو البريد" required />
+            <input type="password" id="tw-password" placeholder="كلمة المرور" required />
+            <input type="email" id="tw-email" placeholder="البريد الإلكتروني (اختياري)" />
+            <input type="text" id="tw-proxy" placeholder="Proxy (اختياري)" />
+            <button type="submit" class="btn btn-primary">تسجيل الدخول</button>
+          </form>
+
+          <!-- Cookie Form -->
+          <form id="cookie-form" class="form hidden">
+            <h3>إضافة حساب من Cookies</h3>
+            <p style="font-size: 12px; color: #657786; margin-bottom: 10px;">
+              الصق JSON من Cookie Editor مباشرة، أو أدخل Cookie string يدوياً
+            </p>
+            <input type="text" id="cookie-username" placeholder="اسم المستخدم على تويتر" required />
+            <textarea id="cookie-value" placeholder="الصق JSON من Cookie Editor أو Cookie string هنا" rows="4" required></textarea>
+            <input type="text" id="ct0-value" placeholder="قيمة ct0 Token (اختياري إذا كان في JSON)" />
+            <button type="submit" class="btn btn-primary">إضافة الحساب</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>حساباتي على تويتر</h2>
+          <div id="accounts-list" class="accounts-list">
+            <p class="loading">جاري التحميل...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- API Keys Tab -->
+      <div class="tab-content" id="api-keys-tab">
+        <div class="card">
+          <h2>إنشاء مفتاح API جديد</h2>
+          <form id="api-key-form" class="form">
+            <input type="text" id="key-name" placeholder="اسم المفتاح" required />
+            <div class="permissions">
+              <label><input type="checkbox" value="tweet" checked /> نشر تغريدات</label>
+              <label><input type="checkbox" value="read" checked /> قراءة البيانات</label>
+              <label><input type="checkbox" value="media" checked /> رفع الوسائط</label>
+            </div>
+            <button type="submit" class="btn btn-primary">إنشاء المفتاح</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>مفاتيح API الخاصة بي</h2>
+          <div id="api-keys-list" class="api-keys-list">
+            <p class="loading">جاري التحميل...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tweet Tab -->
+      <div class="tab-content" id="tweet-tab">
+        <div class="card">
+          <h2>نشر تغريدة</h2>
+          <form id="tweet-form" class="form">
+            <select id="tweet-account" required>
+              <option value="">اختر الحساب</option>
+            </select>
+            <textarea id="tweet-text" placeholder="ماذا يحدث؟" rows="4" maxlength="280" required></textarea>
+            <div class="char-count"><span id="char-count">0</span> / 280</div>
+            
+            <div class="media-upload">
+              <label for="tweet-media" class="btn btn-outline">📎 إضافة صور/فيديو</label>
+              <input type="file" id="tweet-media" multiple accept="image/*,video/*" style="display:none" />
+              <div id="media-preview" class="media-preview"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-large">نشر التغريدة</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Docs Tab -->
+      <div class="tab-content" id="docs-tab">
+        <div class="card">
+          <h2>📚 دليل الاستخدام</h2>
+          
+          <h3>1. نشر تغريدة نصية</h3>
+          <pre><code>curl -X POST https://your-api.com/api/tweet \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "accountId": "account-id",
+    "text": "مرحباً بالعالم!"
+  }'</code></pre>
+
+          <h3>2. نشر تغريدة مع صورة</h3>
+          <pre><code>curl -X POST https://your-api.com/api/tweet/media \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -F "accountId=account-id" \
+  -F "text=تغريدة مع صورة" \
+  -F "media=@image.jpg"</code></pre>
+
+          <h3>3. نشر تغريدة مع فيديو</h3>
+          <pre><code>curl -X POST https://your-api.com/api/tweet/media \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -F "accountId=account-id" \
+  -F "text=تغريدة مع فيديو" \
+  -F "media=@video.mp4"</code></pre>
+
+          <h3>4. استخدام JavaScript</h3>
+          <pre><code>const apiKey = 'YOUR_API_KEY';
+const accountId = 'account-id';
+
+// نشر تغريدة نصية
+const response = await fetch('/api/tweet', {
+  method: 'POST',
+  headers: {
+    'X-API-Key': apiKey,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    accountId: accountId,
+    text: 'مرحباً من JavaScript!'
+  })
+});
+
+const result = await response.json();
+console.log(result);</code></pre>
+
+          <h3>5. استخدام Python</h3>
+          <pre><code>import requests
+
+api_key = 'YOUR_API_KEY'
+account_id = 'account-id'
+
+# نشر تغريدة نصية
+response = requests.post(
+    'https://your-api.com/api/tweet',
+    headers={'X-API-Key': api_key},
+    json={
+        'accountId': account_id,
+        'text': 'مرحباً من Python!'
+    }
+)
+
+print(response.json())</code></pre>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
